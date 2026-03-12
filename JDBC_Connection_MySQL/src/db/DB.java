@@ -11,23 +11,18 @@ import java.util.Properties;
 
 public class DB {
 
-    private static Connection conn = null;
-
     public static Connection getConnection(){
-        if(conn == null){
-            try{
-                Properties props = loadProperties();
-                String url = props.getProperty("dburl");
-                conn = DriverManager.getConnection(url, props);
-            }
-            catch(SQLException e){
-                throw new DbException(e.getMessage());
-            }
+        try{
+            Properties props = loadProperties();
+            String url = props.getProperty("dburl");
+            return DriverManager.getConnection(url, props);
         }
-        return conn;
+        catch(SQLException e){
+            throw new DbException(e.getMessage());
+        }
     }
 
-    public static void closeConnection(){
+    public static void closeConnection(Connection conn){
         if (conn != null){
             try {
                 conn.close();

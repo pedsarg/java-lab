@@ -7,6 +7,9 @@ public class Program {
         DatabaseService databaseService = new DatabaseService();
 
         databaseService.ReadData();
+        databaseService.InsertData();
 
+        //This method print the generated key of the inserted row.
+        //databaseService.InsertDataWithGeneratedKeys();
     }
 }
