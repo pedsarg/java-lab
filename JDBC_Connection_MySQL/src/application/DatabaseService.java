@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import db.DB;
+import db.DBIntegrityException;
 
 public class DatabaseService {
 
@@ -89,6 +90,62 @@ public class DatabaseService {
 
         }catch(SQLException e){
             e.printStackTrace();
+        }finally{
+            DB.closeStatement(st);
+            DB.closeConnection(conn);
+        }
+    }
+
+    public void UpdateData(){
+
+        Connection conn = null;
+        PreparedStatement st = null;
+
+        try{
+            conn = DB.getConnection();
+            
+            st = conn.prepareStatement(
+                "UPDATE Department "
+                + "SET Name = ?"
+                + "WHERE Id = ?"
+            );
+
+            st.setString(1, "Car Development");
+            st.setInt(2, 4);
+
+            int rowsAffected = st.executeUpdate();
+
+            System.out.println("Done! Rows affected: " + rowsAffected);
+
+
+        }catch(SQLException e){
+            e.printStackTrace();
+        }finally{
+            DB.closeStatement(st);
+            DB.closeConnection(conn);
+        }
+    }
+
+    public void DeleteData(){
+        Connection conn = null;
+        PreparedStatement st = null;
+
+        try{
+            conn = DB.getConnection();
+
+            st = conn.prepareStatement(
+                "DELETE FROM Department "
+                + "WHERE Id = ? "
+            );
+
+            st.setInt(1,4);
+
+            int rowsAffected = st.executeUpdate();
+
+            System.out.println("Done! Rows affected: " + rowsAffected);
+
+        }catch(SQLException e){
+            throw new DBIntegrityException(e.getMessage());
         }finally{
             DB.closeStatement(st);
             DB.closeConnection(conn);
