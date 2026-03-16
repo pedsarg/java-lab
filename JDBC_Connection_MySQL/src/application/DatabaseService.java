@@ -151,4 +151,41 @@ public class DatabaseService {
             DB.closeConnection(conn);
         }
     }
+
+    public void TransactionalUpdate(){
+        Connection conn = null;
+        Statement st = null;
+
+        try{
+            conn = DB.getConnection();
+
+            conn.setAutoCommit(false);
+
+            st = conn.createStatement();
+
+            int rows1 = st.executeUpdate("UPDATE Department SET Name = 'Fashion' WHERE Id = 3");
+
+            // if(rows1 != 0)
+            //     throw new SQLException("Fake error");
+
+            int rows2 = st.executeUpdate("UPDATE Department SET Name = 'Car development' WHERE Id = 2");
+
+            conn.commit();
+
+            System.out.println("Rows1: " + rows1);
+            System.out.println("Rows2: " + rows2);
+
+        }catch(SQLException e){
+            try{
+                conn.rollback();
+                throw new DBIntegrityException("Transaction rolled back! Caused by: " + e.getMessage());
+            }catch(SQLException e1){
+                throw new DBIntegrityException("Error trying to rollback! Caused by: " + e1.getMessage());
+            }            
+        }finally{
+            DB.closeStatement(st);
+            DB.closeConnection(conn);
+        }
+
+    }
 }
