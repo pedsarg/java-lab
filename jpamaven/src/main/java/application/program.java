@@ -22,6 +22,12 @@ public class program {
         em.getTransaction().commit();
         System.out.println("Ok!");
 
+        person p3 = em.find(person.class, 2);
+        System.out.println(p3);
+
+        em.remove(p3);
+        em.getTransaction().commit();
+
         em.close();
         emf.close();
 
