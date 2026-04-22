@@ -2,8 +2,12 @@ package com.example.demo.entities;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.example.demo.entities.enums.OrderStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,13 +15,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "tb_order")
 public class Order implements Serializable{
 
-    private static final Long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,9 +30,14 @@ public class Order implements Serializable{
     private Instant moment;
     private Integer orderStatus;
 
+    @JsonManagedReference
     @ManyToOne
     @JoinColumn(name="client_id")
     private User client;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "id.order")
+    private Set<OrderItem> items = new HashSet<>();
 
     public Order(){
 
@@ -40,12 +50,12 @@ public class Order implements Serializable{
         this.client = client;
     }
 
-    public Long getId() {
-        return id;
-    }
-
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public void setMoment(Instant moment) {
+        this.moment = moment;
     }
 
     public void setOrderStatus(OrderStatus orderStatus){
@@ -58,12 +68,20 @@ public class Order implements Serializable{
         this.client = client;
     }
 
+    public void setItems(Set<OrderItem> items) {
+        this.items = items;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
     public Instant getMoment() {
         return moment;
     }
 
-    public void setMoment(Instant moment) {
-        this.moment = moment;
+    public Set<OrderItem> getItems() {
+        return items;
     }
 
     public OrderStatus getOrderStatus(){

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
-@RequestMapping(value = "/Orders")
+@RequestMapping(value = "/order")
 public class OrderResources {
 
     @Autowired
