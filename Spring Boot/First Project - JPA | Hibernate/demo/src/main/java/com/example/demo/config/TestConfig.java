@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Profile;
 
 import com.example.demo.entities.Order;
 import com.example.demo.entities.OrderItem;
+import com.example.demo.entities.Payment;
 import com.example.demo.entities.Product;
 import com.example.demo.entities.User;
 import com.example.demo.entities.Category;
@@ -77,6 +78,11 @@ public class TestConfig implements CommandLineRunner{
         p5.getCategories().add(cat2);
 
         productRepository.saveAll(Arrays.asList(p1, p2, p3, p4, p5));
+
+        Payment pay1 = new Payment(null, Instant.parse("2019-06-20T19:55:07Z"),o1);
+        o1.setPayment(pay1);
+
+        orderRepository.save(o1);
 
     }
 }

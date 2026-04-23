@@ -1,8 +1,7 @@
 package com.example.demo.entities;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.time.Instant;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -10,50 +9,58 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "tb_category")
-public class Category implements Serializable{
+@Table(name="tb_payment")
+public class Payment implements Serializable{
 
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
 
-    @JsonIgnore
-    @ManyToMany(mappedBy = "categories")
-    private Set<Product> products = new HashSet<>();
+    private Instant moment;
 
-    public Category() {
+	@JsonIgnore
+    @OneToOne
+    @MapsId
+    private Order order;
+
+    public Payment() {
     }
 
-    public Category(Long id, String name) {
+    public Payment(Long id, Instant moment, Order order) {
         this.id = id;
-        this.name = name;
+        this.moment = moment;
+        this.order = order;
     }
 
     public Long getId() {
         return id;
     }
-    
+
     public void setId(Long id) {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public Instant getMoment() {
+        return moment;
     }
 
-    public Set<Product> getProducts() {
-        return products;
+    public void setMoment(Instant moment) {
+        this.moment = moment;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
     }
 
     @Override
@@ -64,6 +71,7 @@ public class Category implements Serializable{
         return result;
     }
 
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -72,12 +80,13 @@ public class Category implements Serializable{
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Category other = (Category) obj;
+        Payment other = (Payment) obj;
         if (id == null) {
             if (other.id != null)
                 return false;
         } else if (!id.equals(other.id))
             return false;
         return true;
-    }  
+    } 
+
 }

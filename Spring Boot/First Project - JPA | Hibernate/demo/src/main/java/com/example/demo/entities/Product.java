@@ -6,6 +6,8 @@ import java.util.Set;
 
 import org.hibernate.annotations.ManyToAny;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,7 +20,7 @@ import jakarta.persistence.Table;
 @Table(name="tb_Product")
 public class Product implements Serializable{
 
-    private static final Long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,6 +36,8 @@ public class Product implements Serializable{
             )
 
     private Set<Category> categories = new HashSet<>();
+
+    private Set<OrderItem> items = new HashSet<>();
 
     public Product() {
     }
@@ -88,6 +92,15 @@ public class Product implements Serializable{
 
     public void setImgURL(String imgURL) {
         this.imgURL = imgURL;
+    }
+
+    @JsonIgnore
+    public Set<Order> getOrders(){
+        Set<Order> set = new HashSet<>();
+        for(OrderItem x : items){
+            set.add(x.getOrder());
+        }
+        return set;
     }
 
     @Override
